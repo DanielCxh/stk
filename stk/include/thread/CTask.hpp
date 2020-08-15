@@ -4,10 +4,18 @@
 #include <memory>
 #include <functional>
 
-#include <core/TypeDef.hpp>
+#include <core/CTypeDef.hpp>
 
 namespace stk
 {
+
+enum class TASK_MODE : std::uint32_t
+{
+    UNDEF = 0U,
+    SYNC,
+    ASYNC,
+    MAX
+};
 
 class CTask
 {
@@ -18,21 +26,21 @@ public:
     using Action = std::function<void()>;
 
 public:
-    CTask(Action _action, cuint32 _priority = 0U, bool _consume = true);
+    CTask(Action _action, TASK_MODE _mode = TASK_MODE::ASYNC, cuint32 _priority = 0U, bool _consume = true);
     ~CTask();
 
     void Exec();
 
-    unsigned int GetID() const;
+    // unsigned int GetID() const;
 
 private:
-    static unsigned int m_ID;
-    int    m_priority;
-    Action m_action;
-
+    static int m_ID;
+    int        m_id;
+    Action     m_action;
+    TASK_MODE  m_mode;
+    int        m_priority;
+    bool       m_consume;
 };
-
-static unsigned int CTaskID::m_ID { 0U };
 
 }
 

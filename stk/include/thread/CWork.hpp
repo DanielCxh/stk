@@ -1,33 +1,46 @@
 #ifndef C_WORK_HPP
 #define C_WORK_HPP
 
+#include <memory>
+#include <thread/CWorkPool.hpp>
 
-#include <thread/CThreadPool.hpp>
+namespace stk
+{
 
 class CWork
 {
+public:
+
+    using Ptr = std::shared_ptr<CWork>;
 
 public:
-    static CWork & Instance();
+    static CWork::Ptr Instance();
 
-    void Async();
-    void Sync();
+    void Push(CTask::Ptr & _task);
 
-    void Start();
-    void Push();
 
-private:
     CWork();
     ~CWork();
 
-    void onRunning();
-    void exit();
+private:
+    
+    /*!
+     * \brief Used to init the work threads.
+     */
+    void init();
+
+    /*!
+     * \brief 
+     */
+    // void onRunning();
+    // void exit();
+
+    // void assignTask();
 
 private:
-    int m_threadNum;
-
-    CThreadPool m_syncPool;
-    CThreadPool m_asyncPool;
+    CWorkPool m_works;
 };
+
+}
 
 #endif /* C_WORK_HPP */
